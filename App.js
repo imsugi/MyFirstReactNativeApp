@@ -1,42 +1,92 @@
-import React, {Component} from 'react';
-import {StyleSheet, TouchableOpacity, Text, View} from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  Animated,
+  TextInput,
+  SnapshotViewIOS,
+} from 'react-native';
+import dekisugi from './1.jpg';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
-class App extends Component {
-  state = {
-    count: 0,
-  };
+const App = () => {
+  return <MainComponent />;
+};
 
-  onPress = () => {
-    this.setState({
-      count: this.state.count + 1,
-    });
-  };
+const FadeInView = (props) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.button} onPress={this.onPress}>
-          <Text>Click me</Text>
-        </TouchableOpacity>
-        <View>
-          <Text>You clicked {this.state.count} times</Text>
-        </View>
-      </View>
-    );
-  }
-}
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 8000,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
+  return (
+    <Animated.View
+      style={{
+        ...props.style,
+        opacity: fadeAnim,
+      }}>
+      {props.children}
+    </Animated.View>
+  );
+};
+
+const MainComponent = () => {
+  return (
+    <View style={MainComponentStyle.Property}>
+      <Text style={TextComponentStyle.Property}>Hello !</Text>
+      <Image
+        style={ImageComponentStyle.Property}
+        source={{uri: 'https://placeimg.com/480/600/people'}}
+      />
+      <FadeInView>
+        <Text style={TextComponentStyle.Property}>
+          Have A Great Day For You
+        </Text>
+      </FadeInView>
+    </View>
+  );
+};
+
+const MainComponentStyle = StyleSheet.create({
+  Property: {
+    display: 'flex',
+    flexDirection: 'column',
     padding: 10,
-    marginBottom: 10,
+    position: 'relative',
+    flex: 1,
+    backgroundColor: '#EFA6A6',
+    // borderRadius: 10,
+    resizeMode: 'cover',
+  },
+});
+
+const TextComponentStyle = StyleSheet.create({
+  Property: {
+    position: 'relative',
+    padding: 50,
+    // flex: 1,
+    fontFamily: 'sans-serif-thin',
+    fontSize: 45,
+    display: 'flex',
+    textAlign: 'center',
+  },
+});
+
+const ImageComponentStyle = StyleSheet.create({
+  Property: {
+    position: 'relative',
+    // width: 480,
+    // height: 640,
+    flex: 1,
+    resizeMode: 'center',
+    borderRadius: 10,
   },
 });
 
